@@ -1,0 +1,66 @@
+Car Purchase Advisor Pitch
+========================================================
+author: Muhammad Zeeshan Karamat
+date: 21/11/2014
+
+Problem Statement
+========================================================
+
+When someone wants to purchase a new car, then he need to take in consideration the 
+Miles/(US) gallon. And this MPG higly depend on car transmisison type given a particular value of Acceleration(1/4 mile time) and Weight (lb/1000). That whether it is,
+
+- Automatic
+- Manual
+
+So, which one to choose?
+
+Solution
+========================================================
+So, looking at the dataset that was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-74 models). And choosing covariates
+
+```r
+temp<-summary(lm(data=mtcars,mpg~.-1))$coeff
+temp[order(temp[,"Pr(>|t|)"]),][1:3,]
+```
+
+```
+      Estimate Std. Error   t value   Pr(>|t|)
+qsec  1.191397  0.4594232  2.593245 0.01659185
+wt   -3.826131  1.8623808 -2.054430 0.05200271
+am    2.832222  1.9751282  1.433944 0.16564985
+```
+
+Regression Model 
+========================================================
+Then choosing models for automatic transmission type,
+
+```r
+lm(mtcars$mpg[mtcars$am==0]~
+           mtcars$wt[mtcars$am==0]+
+           mtcars$qsec[mtcars$am==0])$coe
+```
+
+```
+                (Intercept)   mtcars$wt[mtcars$am == 0] 
+                 11.2489412                  -2.9962762 
+mtcars$qsec[mtcars$am == 0] 
+                  0.9454396 
+```
+
+Regression Model 
+========================================================
+and choosing models for manual transmission type,
+
+```r
+lm(mtcars$mpg[mtcars$am==1]~
+           mtcars$wt[mtcars$am==1]+
+           mtcars$qsec[mtcars$am==1])$coe
+```
+
+```
+                (Intercept)   mtcars$wt[mtcars$am == 1] 
+                  20.175399                   -6.754360 
+mtcars$qsec[mtcars$am == 1] 
+                   1.180972 
+```
+So, building models on base of above results, and predicting best car for user to purchase.
